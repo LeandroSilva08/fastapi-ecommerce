@@ -1,0 +1,31 @@
+services:
+  users:
+    build:
+      context: ./services/users
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: postgresql+psycopg://ecommerce:local_dev_password@users-db:5432/users_db
+    depends_on:
+      users-db:
+        condition: service_healthy
+  users-db:
+    image: postgres:17
+    container_name: ecommerce-users-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: local_dev_password
+      POSTGRES_DB: users_db
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - users_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecommerce -d users_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  users_data:
