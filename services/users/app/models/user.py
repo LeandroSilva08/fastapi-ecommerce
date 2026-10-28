@@ -14,6 +14,16 @@ from app.db.database import Base
 
 
 class User(Base):
+    """
+    Represent a registered user in the e-commerce system.
+
+    Stores personal information, an optional address,
+    authentication credentials, and account status.
+
+    Database constraints enforce the expected formats
+    for email addresses, country codes, and postal codes.
+    """
+
     __tablename__ = "users"
 
     __table_args__ = (
